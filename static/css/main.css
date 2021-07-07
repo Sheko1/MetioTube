@@ -1,0 +1,37 @@
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+::-webkit-scrollbar {
+    width: 13px;
+    height: 13px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(13deg, #757575 0%, #757575 64%);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(13deg, #49494A 14%, #49494A 64%);
+}
+
+::-webkit-scrollbar-track {
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: inset 7px 10px 12px 0px #F0F0F0;
+}
+
+body {
+    font-family: 'Raleway', sans-serif;
+    background-color: #8186a3;
+}
+
+.container {
+    margin-top: 90px;
+}
+
+.navbar-nav {
+    margin-left: 10px;
+}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ video.title }} - MetioTube{% endblock %}
+
+{% block content %}
+    <div class="container ml-50">
+        <video controls autoplay width="1280">
+            <source src="{{ video.video_file.url }}">
+        </video>
+
+        <div class="card text-white bg-secondary mt-3" style="max-width: 1280px;">
+            <div class="card-header"><h1 class="card-title">{{ video.title }}</h1></div>
+            <div class="card-body">
+                <h5 class="card-title">Description:</h5>
+                <p class="card-text">{{ video.description }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_script_body %}
+    <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+{% endblock %}

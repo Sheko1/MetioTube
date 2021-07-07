@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block custom_style_head %}
+    <link rel="stylesheet" href="{% static 'css/upload_video.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <form method="post" class="furniture-form" action="{% url 'upload video' %}"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form }}
+                    <button class="btn btn-primary mb-3" type="submit">Create</button>
+                </form>
+            </div>
+            <div class="col-lg-3"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_script_body %}
+    <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+{% endblock %}
