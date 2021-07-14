@@ -1,6 +1,9 @@
-video {
-    max-width: 100%;
-    height: auto;
+.video-js {
+    width: 1280px !important;
+}
+
+.vjs-playback-rate-value {
+    margin-top: 12px;
 }
 
 ::-webkit-scrollbar {
