@@ -19,6 +19,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('MetioTube.main_app.urls'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('admin/', admin.site.urls),
+                  path('', include('MetioTube.main_app.urls')),
+                  path('auth/', include('MetioTube.metio_tube_auth.urls')),
+                  path('profile/', include('MetioTube.profiles.urls'))
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

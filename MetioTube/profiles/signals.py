@@ -1,0 +1,17 @@
+from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from MetioTube.profiles.models import Profile
+
+UserModel = get_user_model()
+
+
+@receiver(post_save, sender=UserModel)
+def user_created(**kwargs):
+    if kwargs['created']:
+        profile = Profile(
+            username=kwargs['instance'].username,
+            user=kwargs['instance']
+        )
+        profile.save()

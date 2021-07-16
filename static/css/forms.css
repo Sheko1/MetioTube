@@ -1,0 +1,9 @@
+.justify-content-center {
+    margin-top: 150px;
+    text-align: center;
+    color: white;
+}
+
+.text-muted {
+    color: #cdcdcd !important;
+}

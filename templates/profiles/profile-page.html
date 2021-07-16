@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <img src="{{ profile.profile_picture.url }}">
+    <br>
+    {{ profile.username }}
+    <br>
+    <a href="{% url 'edit profile' %}">Edit Profile</a>
+</div>
+{% endblock %}

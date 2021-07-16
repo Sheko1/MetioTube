@@ -1,0 +1,45 @@
+{% load static %}
+<nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark" aria-label="Third navbar example">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home page' %}" onmouseover="roko()" onmouseleave="bezroko()">
+            <img src="{% static 'images/roko.ico' %}" width="30" height="40" id="metio">
+            MetioTube
+        </a>
+        <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarsExample03" style="">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'upload video' %}">Upload Video</a>
+                </li>
+
+            </ul>
+
+            <ul class="navbar-nav d-flex">
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile page' %}">Profile</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user logout' %}">Logout</a>
+                    </li>
+
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user login' %}">Login</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user register' %}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </div>
+</nav>
