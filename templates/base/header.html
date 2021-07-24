@@ -22,7 +22,7 @@
             <ul class="navbar-nav d-flex">
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile page' %}">Profile</a>
+                        <a class="nav-link" href="{% url 'profile page' request.user.id %}">Profile</a>
                     </li>
 
                     <li class="nav-item">

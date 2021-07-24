@@ -20,6 +20,22 @@
                 <h5 class="card-title">Description:</h5>
                 <p class="card-text">{{ video.description }}</p>
             </div>
+
+            <div class="card-footer text-muted">
+
+                <a class="text-white btn" href="{% url 'profile page' profile.user_id %}">
+                    <h2>
+                        {% if profile.profile_picture %}
+                            <img class="img-profile-small" src="{{ profile.profile_picture.url }}">
+                        {% else %}
+                            <img class="img-profile-small" src="{% static 'images/default_profile.jpg' %}">
+                        {% endif %}
+                        {{ profile.username }}
+                    </h2>
+                </a>
+
+            </div>
+
         </div>
     </div>
 {% endblock %}

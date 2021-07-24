@@ -1,12 +1,41 @@
 {% extends 'base/base.html' %}
 {% load bootstrap5 %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <img src="{{ profile.profile_picture.url }}">
-    <br>
-    {{ profile.username }}
-    <br>
-    <a href="{% url 'edit profile' %}">Edit Profile</a>
-</div>
+    <div class="container ml-50">
+        <div class="card text-white bg-secondary">
+            <div class="card-header">
+                <h1 class="card-title">
+                    {% if profile.profile_picture %}
+                            <img class="img-profile-big" src="{{ profile.profile_picture.url }}">
+                        {% else %}
+                            <img class="img-profile-big" src="{% static 'images/default_profile.jpg' %}">
+                        {% endif %}
+                    {{ profile.username }}
+                </h1>
+                {% if profile.user_id == user.id %}
+                    <a class="btn btn-light" href="{% url 'edit profile' %}">Edit Profile</a>
+                {% endif %}
+            </div>
+
+            <div class="card-body">
+                {% if profile.about %}
+                    <h5 class="card-title">About {{ profile.username }}:</h5>
+                    <p class="card-text">{{ profile.about }}</p>
+                {% else %}
+                    <h5 class="card-title">{{ profile.username }} has no about info!</h5>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if videos %}
+        <h1 class="text-center text-white mt-3">{{ profile.username }} videos:</h1>
+        {% include 'base/show-videos.html' %}
+
+    {% else %}
+        <h1 class="text-center text-white mt-3">{{ profile.username }} has no uploaded videos!</h1>
+    {% endif %}
+
 {% endblock %}

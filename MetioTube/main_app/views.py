@@ -1,9 +1,13 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from MetioTube.main_app.forms import VideoForm
 from MetioTube.main_app.models import Video
+from MetioTube.profiles.models import Profile
+
+UserModel = get_user_model()
 
 
 def home_page(request):
@@ -18,9 +22,11 @@ def home_page(request):
 
 def video_page(request, pk):
     video = Video.objects.get(pk=pk)
+    profile = Profile.objects.get(pk=video.user.id)
 
     context = {
-        'video': video
+        'video': video,
+        'profile': profile,
     }
 
     return render(request, 'metio-tube/video-page.html', context)
@@ -32,7 +38,9 @@ def upload_video(request):
         form = VideoForm(request.POST, request.FILES)
 
         if form.is_valid():
-            form.save()
+            video = form.save(commit=False)
+            video.user = request.user
+            video.save()
             return redirect('home page')
 
     else:

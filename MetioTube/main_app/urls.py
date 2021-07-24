@@ -1,5 +1,5 @@
+import MetioTube.main_app.signals
 from django.urls import path
-
 from MetioTube.main_app.views import home_page, video_page, upload_video
 
 urlpatterns = (

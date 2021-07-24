@@ -13,7 +13,7 @@ class Profile(models.Model):
 
     profile_picture = models.ImageField(
         upload_to='profiles',
-        default='profiles/default_profile.jpg'
+        blank=True
     )
 
     about = models.TextField(

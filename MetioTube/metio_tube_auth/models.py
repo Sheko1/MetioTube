@@ -41,10 +41,6 @@ class MetioTubeUser(AbstractBaseUser, PermissionsMixin):
         unique=True,
     )
 
-    username = models.CharField(
-        max_length=30
-    )
-
     is_staff = models.BooleanField(
         default=False
     )
@@ -54,6 +50,5 @@ class MetioTubeUser(AbstractBaseUser, PermissionsMixin):
     )
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ('username',)
 
     objects = MetioTubeUserManager()
