@@ -14,7 +14,8 @@ def profile_page(request, pk):
     context = {
         'profile': profile,
         'user': request.user,
-        'videos': videos
+        'videos': videos,
+        'profile_page': True,
     }
 
     return render(request, 'profiles/profile-page.html', context)
