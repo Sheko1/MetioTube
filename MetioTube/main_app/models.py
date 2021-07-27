@@ -30,3 +30,29 @@ class Video(models.Model):
         UserModel,
         on_delete=models.CASCADE
     )
+
+
+class LikeDislike(models.Model):
+    # 0 for dislike 1 for like
+    like_or_dislike = models.IntegerField()
+
+    video = models.ForeignKey(
+        Video,
+        on_delete=models.CASCADE,
+    )
+
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE,
+    )
+
+
+class VideoView(models.Model):
+    video = models.ForeignKey(
+        Video,
+        on_delete=models.CASCADE,
+    )
+
+    session_key = models.CharField(
+        max_length=30,
+    )
