@@ -7,8 +7,8 @@ from MetioTube.main_app.models import Video
 
 
 @receiver(pre_save, sender=Video)
-def change_profile_picture(sender, instance, **kwargs):
-    video = instance.__class__.objects.filter(pk=instance.user_id).first()
+def change_video_thumbnail(sender, instance, **kwargs):
+    video = instance.__class__.objects.filter(pk=instance.id).first()
     if not video:
         return
 

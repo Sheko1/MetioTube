@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load split_get_first %}
 
 {% block title %}{{ video.title }} - MetioTube{% endblock %}
 
@@ -17,25 +18,32 @@
         <div class="card text-white bg-secondary mt-3 mb-2" style="max-width: 1280px;">
             <div class="card-header">
                 <h1 class="card-title">{{ video.title }}</h1>
-                <a class="text-decoration-none text-white" href="{% url 'like-dislike video' video.id 1 %}">
-                    {% if is_rated.like_or_dislike == 1 %}
-                        <i class="bi bi-hand-thumbs-up-fill icons"></i>
-                    {% else %}
-                        <i class="bi bi-hand-thumbs-up icons"></i>
-                    {% endif %}
-                    {{ likes }}
-                </a>
 
-                <a class="text-decoration-none text-white" href="{% url 'like-dislike video' video.id 0 %}">
-                    {% if is_rated.like_or_dislike == 0 %}
-                        <i class="bi bi-hand-thumbs-down-fill icons"></i>
-                    {% else %}
-                        <i class="bi bi-hand-thumbs-down icons"></i>
-                    {% endif %}
-                    {{ dislikes }}
-                </a>
+                <span class="text-muted">{{ views }} views -- {{ video.date|date }}</span>
 
-                <span>Views: {{ views }}</span>
+                <div class="mt-2">
+                    <a class="text-decoration-none text-white" href="{% url 'like-dislike video' video.id 1 %}">
+                        {% if is_rated_by_user.like_or_dislike == 1 %}
+                            <i class="bi bi-hand-thumbs-up-fill icons"></i>
+                        {% else %}
+                            <i class="bi bi-hand-thumbs-up icons"></i>
+                        {% endif %}
+                        {{ likes }}
+                    </a>
+
+                    <a class="text-decoration-none text-white" href="{% url 'like-dislike video' video.id 0 %}">
+                        {% if is_rated_by_user.like_or_dislike == 0 %}
+                            <i class="bi bi-hand-thumbs-down-fill icons"></i>
+                        {% else %}
+                            <i class="bi bi-hand-thumbs-down icons"></i>
+                        {% endif %}
+                        {{ dislikes }}
+                    </a>
+                </div>
+
+                {% if is_owner %}
+                    <a class="btn btn-primary mt-2" href="{% url 'edit video' video.id %}">Edit video</a>
+                {% endif %}
 
             </div>
             <div class="card-body">
@@ -58,7 +66,70 @@
             </div>
 
         </div>
+
+        <div class="card text-white bg-secondary mt-5 mb-2" style="max-width: 1280px;">
+            <div class="card-header text-center">
+                <h1>{{ comments.count }} Comments</h1>
+            </div>
+
+            <div class="card-header">
+                <form method="post" action="{% url 'comment video' video.id %}">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between">
+                        <label for="id_comment">
+                            {% if request.user.profile.profile_picture %}
+                                <img class="img-profile-medium" src="{{ request.user.profile.profile_picture.url }}">
+                            {% else %}
+                                <img class="img-profile-medium" src="{% static 'images/default_profile.jpg' %}">
+                            {% endif %}
+                        </label>
+                        <textarea name="content" id="id_comment" class="form-control comment-form" required></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary mt-2">Comment</button>
+                    </div>
+
+                </form>
+            </div>
+
+            {% for comment in comments %}
+                <div class="card-header">
+                    <a class="text-white text-decoration-none" href="{% url 'profile page' comment.user_id %}">
+                        {% if comment.user.profile.profile_picture %}
+                            <img class="img-profile-medium" src="{{ comment.user.profile.profile_picture.url }}">
+                        {% else %}
+                            <img class="img-profile-medium" src="{% static 'images/default_profile.jpg' %}">
+                        {% endif %}
+                        {{ comment.user.profile.username }}
+                    </a>
+                    <span class="text-muted">{{ comment.date|timesince|split_get_first:',' }} ago</span>
+                    <p style="margin-left: 55px; margin-top: -15px">{{ comment.content }}</p>
+
+                    {% if is_owner or comment.user == request.user %}
+                        <div class="dropdown">
+                            <a class="dropdown-toggle text-decoration-none text-white" type="button"
+                               id="dropdownMenuButton1" data-bs-toggle="dropdown">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'delete comment' comment.id %}">
+                                        Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                </div>
+            {% endfor %}
+
+        </div>
+
     </div>
+
+
 {% endblock %}
 
 {% block custom_script_body %}

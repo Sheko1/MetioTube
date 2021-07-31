@@ -1,4 +1,5 @@
 {% load static %}
+{% load split_get_first %}
 <div class="container">
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for video in videos %}
@@ -20,7 +21,7 @@
                         <h5 class="card-title text-center">{{ video.title }}</h5>
                         <div class="d-flex justify-content-between">
                             <span class="text-muted">{{ video.videoview_set.count }} views</span>
-                            <span class="text-muted">5 days ago</span>
+                            <span class="text-muted">{{ video.date|timesince|split_get_first:',' }} ago</span>
                         </div>
                     </div>
 

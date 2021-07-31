@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from MetioTube.main_app.models import Video
@@ -8,7 +8,7 @@ from MetioTube.profiles.models import Profile
 
 
 def profile_page(request, pk):
-    profile = Profile.objects.get(pk=pk)
+    profile = get_object_or_404(Profile, pk=pk)
     videos = Video.objects.filter(user_id=pk)
 
     context = {

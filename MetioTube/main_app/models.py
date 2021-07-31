@@ -26,6 +26,10 @@ class Video(models.Model):
         help_text='Valid extensions: mp4, mkv, avi'
     )
 
+    date = models.DateTimeField(
+        auto_now_add=True,
+    )
+
     user = models.ForeignKey(
         UserModel,
         on_delete=models.CASCADE
@@ -56,3 +60,21 @@ class VideoView(models.Model):
     session_key = models.CharField(
         max_length=30,
     )
+
+
+class CommentVideo(models.Model):
+    video = models.ForeignKey(
+        Video,
+        on_delete=models.CASCADE,
+    )
+
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE,
+    )
+
+    date = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    content = models.TextField()
