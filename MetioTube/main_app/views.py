@@ -18,7 +18,7 @@ def home_page(request):
         'videos': videos,
     }
 
-    return render(request, 'metio-tube/home-page.html', context)
+    return render(request, 'metio-tube/index.html', context)
 
 
 def video_page(request, pk):
@@ -47,7 +47,7 @@ def video_page(request, pk):
         'form': comment_form,
     }
 
-    return render(request, 'metio-tube/video-page.html', context)
+    return render(request, 'metio-tube/video-details.html', context)
 
 
 @login_required
@@ -69,27 +69,6 @@ def upload_video(request):
     }
 
     return render(request, 'metio-tube/upload-video.html', context)
-
-
-@login_required
-def like_dislike_video(request, pk, like_dislike):
-    video = get_object_or_404(Video, pk=pk)
-    user_like = video.likedislike_set.filter(user=request.user)
-
-    if user_like:
-        user_like = user_like.get()
-        user_like.delete()
-
-        if user_like.like_or_dislike == like_dislike:
-            return redirect('video page', pk)
-
-    LikeDislike(
-        like_or_dislike=like_dislike,
-        user=request.user,
-        video=video
-    ).save()
-
-    return redirect('video page', pk)
 
 
 @login_required
@@ -118,6 +97,45 @@ def edit_video(request, pk):
 
 
 @login_required
+def delete_video(request, pk):
+    video = get_object_or_404(Video, pk=pk)
+
+    if request.user != video.user:
+        return redirect('video page', pk)
+
+    if request.method == 'POST':
+        video.delete()
+        return redirect('home page')
+
+    context = {
+        'video': video
+    }
+
+    return render(request, 'metio-tube/delete-video.html', context)
+
+
+@login_required
+def like_dislike_video(request, pk, like_dislike):
+    video = get_object_or_404(Video, pk=pk)
+    user_like = video.likedislike_set.filter(user=request.user)
+
+    if user_like:
+        user_like = user_like.get()
+        user_like.delete()
+
+        if user_like.like_or_dislike == like_dislike:
+            return redirect('video page', pk)
+
+    LikeDislike(
+        like_or_dislike=like_dislike,
+        user=request.user,
+        video=video
+    ).save()
+
+    return redirect('video page', pk)
+
+
+@login_required
 def comment_video(request, pk):
     video = get_object_or_404(Video, pk=pk)
     form = CommentVideoForm(request.POST)
@@ -139,3 +157,21 @@ def delete_comment(request, pk):
         comment.delete()
 
     return redirect('video page', comment.video_id)
+
+
+@login_required
+def subscribers(request):
+    subscriptions = request.user.subscribers.all()
+    videos = Video.objects.none()
+
+    for profile in subscriptions:
+        videos = videos.union(Video.objects.filter(user=profile.user))
+
+    videos = videos.order_by('-date')
+
+    context = {
+        'subscriptions': subscriptions,
+        'videos': videos,
+    }
+
+    return render(request, 'metio-tube/subscriptions.html', context)

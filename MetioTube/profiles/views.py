@@ -38,3 +38,19 @@ def edit_profile(request):
     }
 
     return render(request, 'profiles/edit-profile.html', context)
+
+
+@login_required
+def subscribe(request, pk):
+    profile = get_object_or_404(Profile, pk=pk)
+
+    if request.user == profile.user:
+        return redirect("profile page", pk)
+
+    if request.user in profile.subscribers.all():
+        profile.subscribers.remove(request.user)
+
+    else:
+        profile.subscribers.add(request.user)
+
+    return redirect("profile page", pk)

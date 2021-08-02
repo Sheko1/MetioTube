@@ -10,7 +10,7 @@ from MetioTube.metio_tube_auth.models import MetioTubeUser
 class MetioTubeUserAdmin(UserAdmin):
     list_filter = ['email', 'is_staff', 'is_verified']
     search_fields = ('email',)
-    list_display = ('email', 'is_staff', 'is_verified')
+    list_display = ('email', 'is_staff', 'is_verified', 'profile')
     ordering = ('email', 'is_staff', 'is_verified')
 
     fieldsets = (
@@ -32,3 +32,7 @@ class MetioTubeUserAdmin(UserAdmin):
             'fields': ('is_staff', 'is_superuser')
         })
     )
+
+    @admin.display
+    def profile(self, obj):
+        return obj.profile

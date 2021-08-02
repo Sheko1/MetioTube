@@ -25,3 +25,11 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         primary_key=True
     )
+
+    subscribers = models.ManyToManyField(
+        UserModel,
+        related_name='subscribers',
+    )
+
+    def __str__(self):
+        return self.username

@@ -35,6 +35,9 @@ class Video(models.Model):
         on_delete=models.CASCADE
     )
 
+    def __str__(self):
+        return self.title
+
 
 class LikeDislike(models.Model):
     # 0 for dislike 1 for like

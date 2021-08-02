@@ -92,7 +92,7 @@ body {
 }
 
 .card-top-container {
-  position: relative;
+    position: relative;
 }
 
 .icons {
@@ -103,3 +103,21 @@ body {
     margin-left: 10px;
 }
 
+.comment {
+    margin-left: 55px;
+    margin-top: -15px;
+}
+
+.subscriptions {
+    max-width: 650px;
+    width: 65vw;
+    color: white !important;
+}
+
+.accordion-button {
+    color: white !important;
+}
+
+.accordion-button:focus {
+    outline: 0 !important;
+}

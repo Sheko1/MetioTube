@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Subscriptions - MetioTube{% endblock %}
+
+{% block content %}
+    <div class="py-5 my-5">
+        {% include 'base/show-videos.html' %}
+    </div>
+    <div class="accordion position-absolute top-0 start-50 translate-middle-x subscriptions container"
+         id="accordionExample">
+        <div class="accordion-item bg-secondary">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed bg-secondary fs-3" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Subscriptions
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                 data-bs-parent="#accordionExample">
+                {% if subscriptions %}
+                    {% for profile in subscriptions %}
+                        <div class="accordion-body">
+                            <a class="text-decoration-none text-white fs-4"
+                               href="{% url 'profile page' profile.user_id %}">
+                                {% if profile.profile_picture %}
+                                    <img class="img-profile-medium" src="{{ profile.profile_picture.url }}">
+                                {% else %}
+                                    <img class="img-profile-medium" src="{% static 'images/default_profile.jpg' %}">
+                                {% endif %}
+                                {{ profile.username }}
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="accordion-body">
+                    <h3>You dont have subscriptions!</h3>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

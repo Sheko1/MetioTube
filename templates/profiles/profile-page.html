@@ -10,14 +10,25 @@
             <div class="card-header">
                 <h1 class="card-title">
                     {% if profile.profile_picture %}
-                            <img class="img-profile-big" src="{{ profile.profile_picture.url }}">
-                        {% else %}
-                            <img class="img-profile-big" src="{% static 'images/default_profile.jpg' %}">
-                        {% endif %}
+                        <img class="img-profile-big" src="{{ profile.profile_picture.url }}">
+                    {% else %}
+                        <img class="img-profile-big" src="{% static 'images/default_profile.jpg' %}">
+                    {% endif %}
+                    <span class="text-muted fs-5 position-absolute my-5 py-3">{{ profile.subscribers.count }} subscribers</span>
                     {{ profile.username }}
                 </h1>
                 {% if profile.user_id == user.id %}
                     <a class="btn btn-light" href="{% url 'edit profile' %}">Edit Profile</a>
+
+                {% else %}
+                    <form method="post" action="{% url 'subscribe' profile.user_id %}">
+                        {% csrf_token %}
+                        {% if request.user not in profile.subscribers.all %}
+                            <button type="submit" class="btn btn-danger">Subscribe</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-light">Unsubscribe</button>
+                        {% endif %}
+                    </form>
                 {% endif %}
             </div>
 
