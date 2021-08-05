@@ -1,9 +1,14 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect, get_object_or_404
 
 # Create your views here.
-from MetioTube.main_app.core.get_view import get_view
+from django.urls import reverse_lazy, reverse
+from django.views import View
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+
+from MetioTube.core.get_view import get_view
+from MetioTube.core.views_mixin import OwnerOfContentRequiredMixin
 from MetioTube.main_app.forms import VideoUploadForm, VideoEditForm, CommentVideoForm
 from MetioTube.main_app.models import Video, LikeDislike, CommentVideo
 from MetioTube.profiles.models import Profile
@@ -11,167 +16,125 @@ from MetioTube.profiles.models import Profile
 UserModel = get_user_model()
 
 
-def home_page(request):
-    videos = Video.objects.all()
-
-    context = {
-        'videos': videos,
-    }
-
-    return render(request, 'metio-tube/index.html', context)
+class HomeListView(ListView):
+    template_name = 'metio-tube/index.html'
+    model = Video
+    context_object_name = 'videos'
 
 
-def video_page(request, pk):
-    video = get_object_or_404(Video, pk=pk)
-    get_view(request, pk)
-    profile = Profile.objects.get(pk=video.user.id)
+class VideoDetailsView(DetailView):
+    template_name = 'metio-tube/video-details.html'
+    model = Video
+    context_object_name = 'video'
 
-    comments = video.commentvideo_set.order_by('-date')
-    comment_form = CommentVideoForm()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    likes = video.likedislike_set.filter(like_or_dislike=1).count()
-    dislikes = video.likedislike_set.filter(like_or_dislike=0).count()
-    is_rated_by_user = video.likedislike_set.filter(user_id=request.user.id).first()
-    views = video.videoview_set.count()
-    is_owner = request.user == video.user
+        context['profile'] = Profile.objects.get(pk=self.object.user_id)
+        context['comments'] = self.object.commentvideo_set.order_by('-date')
+        context['likes'] = self.object.likedislike_set.filter(like_or_dislike=1).count()
+        context['dislikes'] = self.object.likedislike_set.filter(like_or_dislike=0).count()
+        context['is_rated_by_user'] = self.object.likedislike_set.filter(user_id=self.request.user.id).first()
+        context['views'] = self.object.videoview_set.count()
+        context['is_owner'] = self.request.user == self.object.user
 
-    context = {
-        'video': video,
-        'profile': profile,
-        'likes': likes,
-        'dislikes': dislikes,
-        'is_rated_by_user': is_rated_by_user,
-        'views': views,
-        'is_owner': is_owner,
-        'comments': comments,
-        'form': comment_form,
-    }
+        return context
 
-    return render(request, 'metio-tube/video-details.html', context)
+    def dispatch(self, request, *args, **kwargs):
+        if self.get_object():
+            get_view(request, kwargs['pk'])
+
+        return super().dispatch(request, *args, **kwargs)
 
 
-@login_required
-def upload_video(request):
-    if request.method == 'POST':
-        form = VideoUploadForm(request.POST, request.FILES)
+class UploadVideoView(LoginRequiredMixin, CreateView):
+    template_name = 'metio-tube/upload-video.html'
+    form_class = VideoUploadForm
+    success_url = reverse_lazy('home page')
+
+    def form_valid(self, form):
+        video = form.save(commit=False)
+        video.user = self.request.user
+        video.save()
+
+        return super().form_valid(form)
+
+
+class EditVideoView(LoginRequiredMixin, OwnerOfContentRequiredMixin, UpdateView):
+    template_name = 'metio-tube/edit-video.html'
+    model = Video
+    form_class = VideoEditForm
+
+    def get_success_url(self):
+        return reverse('video page', kwargs={'pk': self.object.id})
+
+
+class DeleteVideoView(LoginRequiredMixin, OwnerOfContentRequiredMixin, DeleteView):
+    template_name = 'metio-tube/delete-video.html'
+    model = Video
+    success_url = reverse_lazy('home page')
+
+
+class LikeDislikeView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        video = get_object_or_404(Video, pk=kwargs['pk'])
+        user_like = video.likedislike_set.filter(user=request.user)
+
+        if user_like:
+            user_like = user_like.get()
+            user_like.delete()
+
+            if user_like.like_or_dislike == kwargs['like_dislike']:
+                return redirect('video page', kwargs['pk'])
+
+        LikeDislike(
+            like_or_dislike=kwargs['like_dislike'],
+            user=request.user,
+            video=video
+        ).save()
+
+        return redirect('video page', kwargs['pk'])
+
+
+class CommentView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        video = get_object_or_404(Video, pk=kwargs['pk'])
+        form = CommentVideoForm(request.POST)
 
         if form.is_valid():
-            video = form.save(commit=False)
-            video.user = request.user
-            video.save()
-            return redirect('home page')
+            comment = form.save(commit=False)
+            comment.video = video
+            comment.user = request.user
+            comment.save()
 
-    else:
-        form = VideoUploadForm()
-
-    context = {
-        'form': form
-    }
-
-    return render(request, 'metio-tube/upload-video.html', context)
+        return redirect('video page', kwargs['pk'])
 
 
-@login_required
-def edit_video(request, pk):
-    video = get_object_or_404(Video, pk=pk)
+class DeleteCommentView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        comment = get_object_or_404(CommentVideo, pk=kwargs['pk'])
 
-    if request.user != video.user:
-        return redirect('video page', pk)
+        if request.user == comment.user or request.user == comment.video.user:
+            comment.delete()
 
-    if request.method == 'POST':
-        form = VideoEditForm(request.POST, request.FILES, instance=video)
-
-        if form.is_valid():
-            form.save()
-            return redirect('video page', pk)
-
-    else:
-        form = VideoEditForm(instance=video)
-
-    context = {
-        'form': form,
-        'video_id': video.id
-    }
-
-    return render(request, 'metio-tube/edit-video.html', context)
+        return redirect('video page', comment.video_id)
 
 
-@login_required
-def delete_video(request, pk):
-    video = get_object_or_404(Video, pk=pk)
+class SubscribersView(LoginRequiredMixin, TemplateView):
+    template_name = 'metio-tube/subscriptions.html'
 
-    if request.user != video.user:
-        return redirect('video page', pk)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    if request.method == 'POST':
-        video.delete()
-        return redirect('home page')
+        subscriptions = self.request.user.subscribers.all()
+        videos = Video.objects.none()
 
-    context = {
-        'video': video
-    }
+        for profile in subscriptions:
+            videos = videos.union(Video.objects.filter(user=profile.user))
 
-    return render(request, 'metio-tube/delete-video.html', context)
+        videos = videos.order_by('-date')
 
+        context['subscriptions'] = subscriptions
+        context['videos'] = videos
 
-@login_required
-def like_dislike_video(request, pk, like_dislike):
-    video = get_object_or_404(Video, pk=pk)
-    user_like = video.likedislike_set.filter(user=request.user)
-
-    if user_like:
-        user_like = user_like.get()
-        user_like.delete()
-
-        if user_like.like_or_dislike == like_dislike:
-            return redirect('video page', pk)
-
-    LikeDislike(
-        like_or_dislike=like_dislike,
-        user=request.user,
-        video=video
-    ).save()
-
-    return redirect('video page', pk)
-
-
-@login_required
-def comment_video(request, pk):
-    video = get_object_or_404(Video, pk=pk)
-    form = CommentVideoForm(request.POST)
-
-    if form.is_valid():
-        comment = form.save(commit=False)
-        comment.video = video
-        comment.user = request.user
-        comment.save()
-
-    return redirect('video page', pk)
-
-
-@login_required
-def delete_comment(request, pk):
-    comment = get_object_or_404(CommentVideo, pk=pk)
-
-    if request.user == comment.user or request.user == comment.video.user:
-        comment.delete()
-
-    return redirect('video page', comment.video_id)
-
-
-@login_required
-def subscribers(request):
-    subscriptions = request.user.subscribers.all()
-    videos = Video.objects.none()
-
-    for profile in subscriptions:
-        videos = videos.union(Video.objects.filter(user=profile.user))
-
-    videos = videos.order_by('-date')
-
-    context = {
-        'subscriptions': subscriptions,
-        'videos': videos,
-    }
-
-    return render(request, 'metio-tube/subscriptions.html', context)
+        return context

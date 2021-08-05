@@ -17,13 +17,11 @@ class Video(models.Model):
     thumbnail = models.ImageField(
         upload_to='images',
         blank=True,
-        help_text='Can be blank'
     )
 
     video_file = models.FileField(
         validators=[validate_video_file],
         upload_to='videos',
-        help_text='Valid extensions: mp4, mkv, avi'
     )
 
     date = models.DateTimeField(

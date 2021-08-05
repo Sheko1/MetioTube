@@ -2,23 +2,26 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
+from django.views.generic import DetailView
+
 from MetioTube.main_app.models import Video
 from MetioTube.profiles.forms import ProfileForm
 from MetioTube.profiles.models import Profile
 
 
-def profile_page(request, pk):
-    profile = get_object_or_404(Profile, pk=pk)
-    videos = Video.objects.filter(user_id=pk)
+class ProfileDetailsView(DetailView):
+    template_name = 'profiles/profile-page.html'
+    model = Profile
+    context_object_name = 'profile'
 
-    context = {
-        'profile': profile,
-        'user': request.user,
-        'videos': videos,
-        'profile_page': True,
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    return render(request, 'profiles/profile-page.html', context)
+        context['user'] = self.request.user
+        context['videos'] = Video.objects.filter(user_id=self.kwargs['pk'])
+        context['profile_page'] = True
+
+        return context
 
 
 @login_required

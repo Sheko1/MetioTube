@@ -21,24 +21,31 @@
 
                 <span class="text-muted">{{ views }} views -- {{ video.date|date }}</span>
 
-                <div class="mt-2">
-                    <a class="text-decoration-none text-white" href="{% url 'like-dislike video' video.id 1 %}">
-                        {% if is_rated_by_user.like_or_dislike == 1 %}
-                            <i class="bi bi-hand-thumbs-up-fill icons"></i>
-                        {% else %}
-                            <i class="bi bi-hand-thumbs-up icons"></i>
-                        {% endif %}
-                        {{ likes }}
-                    </a>
+                <div class="mt-2 d-flex justify-content-start">
+                    <form method="post" action="{% url 'like-dislike video' video.id 1 %}">
+                        {% csrf_token %}
+                        <button class="btn btn-no-line-when-focus">
+                            {% if is_rated_by_user.like_or_dislike == 1 %}
+                                <i class="bi bi-hand-thumbs-up-fill icons"></i>
+                            {% else %}
+                                <i class="bi bi-hand-thumbs-up icons"></i>
+                            {% endif %}
+                            {{ likes }}
+                        </button>
+                    </form>
 
-                    <a class="text-decoration-none text-white" href="{% url 'like-dislike video' video.id 0 %}">
-                        {% if is_rated_by_user.like_or_dislike == 0 %}
-                            <i class="bi bi-hand-thumbs-down-fill icons"></i>
-                        {% else %}
-                            <i class="bi bi-hand-thumbs-down icons"></i>
-                        {% endif %}
-                        {{ dislikes }}
-                    </a>
+                    <form method="post" action="{% url 'like-dislike video' video.id 0 %}">
+                        {% csrf_token %}
+                        <button class="btn btn-no-line-when-focus">
+                            {% if is_rated_by_user.like_or_dislike == 0 %}
+                                <i class="bi bi-hand-thumbs-down-fill icons"></i>
+                            {% else %}
+                                <i class="bi bi-hand-thumbs-down icons"></i>
+                            {% endif %}
+                            {{ dislikes }}
+                        </button>
+                    </form>
+
                 </div>
 
                 {% if is_owner %}
@@ -60,7 +67,7 @@
                         {% else %}
                             <img class="img-profile-medium" src="{% static 'images/default_profile.jpg' %}">
                         {% endif %}
-                        <span class="text-muted fs-6 position-absolute my-4 py-3">
+                        <span class="text-muted fs-6 position-absolute my-4 py-2">
                             {{ profile.subscribers.count }} subscribers
                         </span>
                         {{ profile.username }}
@@ -118,9 +125,12 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li>
-                                    <a class="dropdown-item" href="{% url 'delete comment' comment.id %}">
-                                        Delete
-                                    </a>
+                                    <form method="post" action="{% url 'delete comment' comment.id %}">
+                                        {% csrf_token %}
+                                        <button class="dropdown-item">
+                                            Delete
+                                        </button>
+                                    </form>
 
                                     {% if comment.user == request.user %}
                                         <a class="dropdown-item" href="#">Edit</a>

@@ -1,16 +1,17 @@
 import MetioTube.main_app.signals
 from django.urls import path
-from MetioTube.main_app.views import home_page, video_page, upload_video, like_dislike_video, edit_video, comment_video, \
-    delete_comment, delete_video, subscribers
+from MetioTube.main_app.views import HomeListView, UploadVideoView, LikeDislikeView, EditVideoView, \
+    CommentView, \
+    DeleteCommentView, DeleteVideoView, SubscribersView, VideoDetailsView
 
 urlpatterns = (
-    path('', home_page, name='home page'),
-    path('video/<int:pk>', video_page, name='video page'),
-    path('upload/', upload_video, name='upload video'),
-    path('edit-video/<int:pk>', edit_video, name='edit video'),
-    path('delete-video/<int:pk>', delete_video, name='delete video'),
-    path('like_dislike/<int:pk>/<int:like_dislike>', like_dislike_video, name='like-dislike video'),
-    path('comment-video/<int:pk>', comment_video, name='comment video'),
-    path('delete-comment/<int:pk>', delete_comment, name='delete comment'),
-    path('subscribers/', subscribers, name='subscribers page')
+    path('', HomeListView.as_view(), name='home page'),
+    path('video/<int:pk>', VideoDetailsView.as_view(), name='video page'),
+    path('upload/', UploadVideoView.as_view(), name='upload video'),
+    path('edit-video/<int:pk>', EditVideoView.as_view(), name='edit video'),
+    path('delete-video/<int:pk>', DeleteVideoView.as_view(), name='delete video'),
+    path('like_dislike/<int:pk>/<int:like_dislike>', LikeDislikeView.as_view(), name='like-dislike video'),
+    path('comment-video/<int:pk>', CommentView.as_view(), name='comment video'),
+    path('delete-comment/<int:pk>', DeleteCommentView.as_view(), name='delete comment'),
+    path('subscribers/', SubscribersView.as_view(), name='subscribers page')
 )

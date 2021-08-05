@@ -8,4 +8,4 @@ def validate_video_file(value):
     valid_extensions = ('.mp4', '.mkv', '.avi', '.mov')
 
     if not extension.lower() in valid_extensions:
-        raise ValidationError('Wrong file extension!')
+        raise ValidationError('Wrong file extension')

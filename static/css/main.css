@@ -121,3 +121,8 @@ body {
 .accordion-button:focus {
     outline: 0 !important;
 }
+
+.btn-no-line-when-focus:focus {
+    outline: none;
+    box-shadow: none;
+}

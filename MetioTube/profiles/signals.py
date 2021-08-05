@@ -12,7 +12,7 @@ UserModel = get_user_model()
 @receiver(post_save, sender=UserModel)
 def user_created(sender, instance, created, **kwargs):
     if created:
-        username = instance.email.split('@')[0]
+        username = instance.email.split('@')[0][:30]
         profile = Profile(
             username=username,
             user=instance

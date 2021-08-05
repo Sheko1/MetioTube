@@ -1,44 +1,38 @@
 from django.contrib.auth import login, logout
-from django.shortcuts import render, redirect
+from django.contrib.auth.views import LoginView
+from django.shortcuts import redirect
 
 # Create your views here.
-from MetioTube.metio_tube_auth.forms import RegisterForm, LoginForm
+from django.urls import reverse_lazy, reverse
+from django.views.generic import CreateView
+
+from MetioTube.metio_tube_auth.forms import RegisterForm
 
 
-def user_register(request):
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
+class RegisterUserView(CreateView):
+    template_name = 'auth/user-register.html'
+    form_class = RegisterForm
+    success_url = reverse_lazy('home page')
 
-        if form.is_valid():
-            form.save()
-            return redirect('user login')
+    def form_valid(self, form):
+        result = super().form_valid(form)
 
-    else:
-        form = RegisterForm()
+        login(self.request, self.object)
 
-    context = {
-        'form': form
-    }
-
-    return render(request, 'auth/user-register.html', context)
+        return result
 
 
-def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
+class LoginUserView(LoginView):
+    template_name = 'auth/user-login.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
             return redirect('home page')
 
-    else:
-        form = LoginForm()
+        return super().get(request, *args, **kwargs)
 
-    context = {
-        'form': form,
-    }
-
-    return render(request, 'auth/user-login.html', context)
+    def get_success_url(self):
+        return reverse('home page')
 
 
 def user_logout(request):
