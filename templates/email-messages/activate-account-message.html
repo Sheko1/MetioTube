@@ -1,5 +1,5 @@
 {% autoescape off %}
-    Hi,
+    Hi {{ user }},
     Please click on the link to confirm your registration,
     {{ domain }}{% url 'activate' pk token %}
 {% endautoescape %}

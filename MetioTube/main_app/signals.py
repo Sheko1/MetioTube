@@ -1,6 +1,6 @@
 import os
 
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_delete
 from django.dispatch import receiver
 
 from MetioTube.main_app.models import Video
@@ -17,3 +17,9 @@ def change_video_thumbnail(sender, instance, **kwargs):
     if old_img:
         if old_img != instance.thumbnail:
             os.remove(old_img.path)
+
+
+@receiver(post_delete, sender=Video)
+def delete_media_files(sender, instance, **kwargs):
+    instance.thumbnail.delete(save=False)
+    instance.video_file.delete(save=False)

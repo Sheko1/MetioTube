@@ -7,7 +7,7 @@ class VideoUploadForm(forms.ModelForm):
     class Meta:
         model = Video
         fields = ('title', 'description', 'video_file', 'thumbnail')
-        help_texts = {'video_file': 'Valid extensions: mp4, mkv, avi, mov', 'thumbnail': 'Can be blank'}
+        help_texts = {'video_file': 'Valid extensions: mp4, avi, mov', 'thumbnail': 'Can be blank'}
 
 
 class VideoEditForm(forms.ModelForm):

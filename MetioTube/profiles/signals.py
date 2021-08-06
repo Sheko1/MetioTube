@@ -2,7 +2,7 @@ import os
 from threading import Thread
 
 from django.contrib.auth import get_user_model
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 
 from MetioTube.core.auto_delete_account_if_not_activated import auto_delete_account_if_not_activated
@@ -36,3 +36,8 @@ def change_profile_picture(sender, instance, **kwargs):
     if old_img:
         if old_img != instance.profile_picture:
             os.remove(old_img.path)
+
+
+@receiver(post_delete, sender=Profile)
+def delete_media_files(sender, instance, **kwargs):
+    instance.profile_picture.delete(save=False)

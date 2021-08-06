@@ -8,6 +8,7 @@ def send_email(user, request, mail_subject, message_template):
     current_site = get_current_site(request)
 
     message = render_to_string(message_template, {
+        'user': user,
         'domain': current_site.domain,
         'pk': user.id,
         'token': default_token_generator.make_token(user),
