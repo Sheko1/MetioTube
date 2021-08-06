@@ -24,7 +24,7 @@
                 <div class="mt-2 d-flex justify-content-start">
                     <form method="post" action="{% url 'like-dislike video' video.id 1 %}">
                         {% csrf_token %}
-                        <button class="btn btn-no-line-when-focus">
+                        <button class="btn btn-no-line-when-focus text-white">
                             {% if is_rated_by_user.like_or_dislike == 1 %}
                                 <i class="bi bi-hand-thumbs-up-fill icons"></i>
                             {% else %}
@@ -36,7 +36,7 @@
 
                     <form method="post" action="{% url 'like-dislike video' video.id 0 %}">
                         {% csrf_token %}
-                        <button class="btn btn-no-line-when-focus">
+                        <button class="btn btn-no-line-when-focus text-white">
                             {% if is_rated_by_user.like_or_dislike == 0 %}
                                 <i class="bi bi-hand-thumbs-down-fill icons"></i>
                             {% else %}
@@ -49,8 +49,8 @@
                 </div>
 
                 {% if is_owner %}
-                    <a class="btn btn-primary mt-2" href="{% url 'edit video' video.id %}">Edit video</a>
-                    <a class="btn btn-danger mt-2" href="{% url 'delete video' video.id %}">Delete video</a>
+                    <a class="btn btn-primary mt-2" href="{% url 'edit video' video.id %}">Edit Video</a>
+                    <a class="btn btn-danger mt-2" href="{% url 'delete video' video.id %}">Delete Video</a>
                 {% endif %}
 
             </div>
@@ -131,10 +131,6 @@
                                             Delete
                                         </button>
                                     </form>
-
-                                    {% if comment.user == request.user %}
-                                        <a class="dropdown-item" href="#">Edit</a>
-                                    {% endif %}
                                 </li>
                             </ul>
                         </div>

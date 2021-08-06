@@ -1,0 +1,23 @@
+{% extends 'base/base.html' %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1 class="text-white">Are you sure you want to delete account?</h1>
+                <div class="m-auto d-flex justify-content-center">
+                    <div class="m-3 mt-3">
+                        <form method="post" action="{% url 'delete account' user.id %}">
+                            {% csrf_token %}
+                            <button class="btn btn-danger">Yes</button>
+                        </form>
+                    </div>
+                    <div class="m-3 mt-3">
+                        <a class="btn btn-primary" href="{% url 'profile page' user.id %}">No</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

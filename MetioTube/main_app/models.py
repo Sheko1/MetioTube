@@ -39,7 +39,9 @@ class Video(models.Model):
 
 class LikeDislike(models.Model):
     # 0 for dislike 1 for like
-    like_or_dislike = models.IntegerField()
+    like_or_dislike = models.IntegerField(
+        help_text='1 for like 0 for dislike'
+    )
 
     video = models.ForeignKey(
         Video,

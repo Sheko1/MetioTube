@@ -10,11 +10,11 @@
                 <div class="m-3 mt-3">
                     <form method="post" action="{% url 'delete video' video.id %}">
                         {% csrf_token %}
-                        <button class="btn btn-danger">Confirm</button>
+                        <button class="btn btn-danger">Yes</button>
                     </form>
                 </div>
                 <div class="m-3 mt-3">
-                    <a class="btn btn-primary" href="{% url 'video page' video.id %}">No, go back</a>
+                    <a class="btn btn-primary" href="{% url 'video page' video.id %}">No</a>
                 </div>
             </div>
         </div>

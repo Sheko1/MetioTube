@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1bb%djiy*4a&yf^t)y69r%7_vr$u8l=k6!kya14ug#61vyoep0'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'MetioTube.main_app',
     'MetioTube.metio_tube_auth',
     'MetioTube.profiles',
@@ -128,3 +129,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'metio_tube_auth.MetioTubeUser'
 LOGIN_URL = reverse_lazy('user login')
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.environ['EMAIL']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
+EMAIL_PORT = 587

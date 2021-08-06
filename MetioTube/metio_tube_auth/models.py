@@ -45,8 +45,8 @@ class MetioTubeUser(AbstractBaseUser, PermissionsMixin):
         default=False
     )
 
-    is_verified = models.BooleanField(
-        default=False
+    is_active = models.BooleanField(
+        default=True
     )
 
     USERNAME_FIELD = 'email'
