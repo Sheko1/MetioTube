@@ -1,5 +1,21 @@
 # MetioTube django template app
 
+## Overview
+MetioTube is a web app where you can share video content with others.
+
+Authenticated users can upload, like, dislike and post comments.
+
+Unauthenticated users can only view the created content.
+
+**How to make an account?**
+
+If you make account through /auth/register your account will not be activated.
+
+To activate your account, you need to click on the activation link, which will be sent to the email you registered.
+
+[Setup your gmail to work with MetioTube](#usage)
+
+Or you can make account with manage.py, where the created account will be activated without email confirmation.
 
 ## Installation
 **First**
