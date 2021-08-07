@@ -152,6 +152,11 @@ class SearchVideoView(ListView):
     context_object_name = 'videos'
     paginate_by = 12
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q')
+
+        return context
+
     def get_queryset(self):
-        query = self.request.GET.get('q')
-        return Video.objects.filter(title__contains=query)
+        return Video.objects.filter(title__contains=self.request.GET.get('q'))
