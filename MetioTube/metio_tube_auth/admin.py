@@ -8,7 +8,7 @@ from MetioTube.metio_tube_auth.models import MetioTubeUser
 
 @admin.register(MetioTubeUser)
 class MetioTubeUserAdmin(UserAdmin):
-    list_filter = ['is_staff', 'is_active']
+    list_filter = ('is_staff', 'is_active')
     search_fields = ('email',)
     list_display = ('email', 'is_staff', 'is_active', 'profile')
     ordering = ('email', 'is_staff', 'is_active')
@@ -25,7 +25,7 @@ class MetioTubeUserAdmin(UserAdmin):
 
     add_fieldsets = (
         (None, {
-            'fields': ('email', 'password1', 'password2', 'is_verified'),
+            'fields': ('email', 'password1', 'password2', 'is_active'),
         }),
 
         ('Permissions', {

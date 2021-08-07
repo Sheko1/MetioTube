@@ -2,7 +2,7 @@ import MetioTube.main_app.signals
 from django.urls import path
 from MetioTube.main_app.views import HomeListView, UploadVideoView, LikeDislikeView, EditVideoView, \
     CommentView, \
-    DeleteCommentView, DeleteVideoView, SubscribersView, VideoDetailsView
+    DeleteCommentView, DeleteVideoView, SubscribersView, VideoDetailsView, SearchVideoView
 
 urlpatterns = (
     path('', HomeListView.as_view(), name='home page'),
@@ -13,5 +13,6 @@ urlpatterns = (
     path('like_dislike/<int:pk>/<int:like_dislike>', LikeDislikeView.as_view(), name='like-dislike video'),
     path('comment-video/<int:pk>', CommentView.as_view(), name='comment video'),
     path('delete-comment/<int:pk>', DeleteCommentView.as_view(), name='delete comment'),
-    path('subscribers/', SubscribersView.as_view(), name='subscribers page')
+    path('subscribers/', SubscribersView.as_view(), name='subscribers page'),
+    path('search/', SearchVideoView.as_view(), name='search video'),
 )

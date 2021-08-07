@@ -5,7 +5,7 @@ from django.shortcuts import redirect, get_object_or_404
 # Create your views here.
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from MetioTube.core.get_view import get_view
 from MetioTube.core.views_mixin import OwnerOfContentRequiredMixin
@@ -20,6 +20,11 @@ class HomeListView(ListView):
     template_name = 'metio-tube/index.html'
     model = Video
     context_object_name = 'videos'
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.order_by('?')
 
 
 class VideoDetailsView(DetailView):
@@ -120,21 +125,33 @@ class DeleteCommentView(LoginRequiredMixin, View):
         return redirect('video page', comment.video_id)
 
 
-class SubscribersView(LoginRequiredMixin, TemplateView):
+class SubscribersView(LoginRequiredMixin, ListView):
     template_name = 'metio-tube/subscriptions.html'
+    context_object_name = 'videos'
+    paginate_by = 12
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        context['subscriptions'] = self.request.user.subscribers.all()
+
+        return context
+
+    def get_queryset(self):
         subscriptions = self.request.user.subscribers.all()
         videos = Video.objects.none()
 
         for profile in subscriptions:
             videos = videos.union(Video.objects.filter(user=profile.user))
 
-        videos = videos.order_by('-date')
+        return videos.order_by('-date')
 
-        context['subscriptions'] = subscriptions
-        context['videos'] = videos
 
-        return context
+class SearchVideoView(ListView):
+    template_name = 'metio-tube/index.html'
+    context_object_name = 'videos'
+    paginate_by = 12
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        return Video.objects.filter(title__contains=query)
