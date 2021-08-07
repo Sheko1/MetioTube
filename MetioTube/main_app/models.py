@@ -61,7 +61,7 @@ class VideoView(models.Model):
     )
 
     session_key = models.CharField(
-        max_length=30,
+        max_length=32,
     )
 
 
