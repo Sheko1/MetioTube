@@ -34,7 +34,7 @@ Change django secret key in settings.py
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY'] # - change to valid secret key
 ```
 - Change email and email password in settings.py
-- You must [**allow** less secure apps](https://myaccount.google.com/lesssecureapps) in your gmail account and [display unlock captcha](https://www.google.com/accounts/DisplayUnlockCaptcha)
+- You must [**allow** less secure apps](https://myaccount.google.com/lesssecureapps) and [display unlock captcha](https://www.google.com/accounts/DisplayUnlockCaptcha) in your gmail account!
 
 ```python
 EMAIL_USE_TLS = True
