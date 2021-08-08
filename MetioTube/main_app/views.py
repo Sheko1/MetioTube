@@ -24,7 +24,7 @@ class HomeListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.order_by('-date')
+        return queryset.order_by('?')
 
 
 class VideoDetailsView(DetailView):
