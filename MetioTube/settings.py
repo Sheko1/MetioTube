@@ -13,6 +13,7 @@ import os.path
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import cloudinary
 from django.urls import reverse_lazy
 
 from dotenv import load_dotenv, find_dotenv
@@ -20,7 +21,6 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -31,8 +31,7 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['metio.hopto.org']
 
 # Application definition
 
@@ -81,7 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'MetioTube.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -96,14 +94,12 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
 
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -117,7 +113,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -143,3 +138,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ['EMAIL']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
 EMAIL_PORT = 587
+
+cloudinary.config(
+    cloud_name=os.environ['CLOUD_NAME'],
+    api_key=os.environ['API_KEY'],
+    api_secret=os.environ['API_SECRET']
+)

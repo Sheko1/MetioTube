@@ -1,8 +1,9 @@
+from cloudinary.models import CloudinaryField
 from django.contrib.auth import get_user_model
 from django.db import models
 
 # Create your models here.
-from MetioTube.main_app.validators import validate_video_file
+from MetioTube.core.validators import validate_video_file, validate_image
 
 UserModel = get_user_model()
 
@@ -14,14 +15,15 @@ class Video(models.Model):
 
     description = models.TextField()
 
-    thumbnail = models.ImageField(
-        upload_to='images',
+    thumbnail = CloudinaryField(
+        resource_type='image',
         blank=True,
+        validators=(validate_image,),
     )
 
-    video_file = models.FileField(
-        validators=[validate_video_file],
-        upload_to='videos',
+    video_file = CloudinaryField(
+        resource_type='video',
+        validators=(validate_video_file,),
     )
 
     date = models.DateTimeField(

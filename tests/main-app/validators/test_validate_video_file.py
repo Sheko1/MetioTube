@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.files import File
 from django.test import TestCase
 
-from MetioTube.main_app.validators import validate_video_file
+from MetioTube.core.validators import validate_video_file
 
 
 class ValidateVideoFileTests(TestCase):

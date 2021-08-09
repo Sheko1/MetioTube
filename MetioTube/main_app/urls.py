@@ -1,4 +1,3 @@
-import MetioTube.main_app.signals
 from django.urls import path
 from MetioTube.main_app.views import HomeListView, UploadVideoView, LikeDislikeView, EditVideoView, \
     CommentView, \

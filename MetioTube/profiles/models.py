@@ -1,7 +1,9 @@
+from cloudinary.models import CloudinaryField
 from django.contrib.auth import get_user_model
 from django.db import models
 
 # Create your models here.
+from MetioTube.core.validators import validate_image
 
 UserModel = get_user_model()
 
@@ -11,9 +13,10 @@ class Profile(models.Model):
         max_length=30
     )
 
-    profile_picture = models.ImageField(
-        upload_to='profiles',
-        blank=True
+    profile_picture = CloudinaryField(
+        resource_type='image',
+        blank=True,
+        validators=(validate_image,)
     )
 
     about = models.TextField(
@@ -29,6 +32,7 @@ class Profile(models.Model):
     subscribers = models.ManyToManyField(
         UserModel,
         related_name='subscribers',
+        blank=True,
     )
 
     def __str__(self):

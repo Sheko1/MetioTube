@@ -24,20 +24,3 @@ def user_created(sender, instance, created, **kwargs):
             user=instance
         )
         profile.save()
-
-
-@receiver(pre_save, sender=Profile)
-def change_profile_picture(sender, instance, **kwargs):
-    profile = instance.__class__.objects.filter(pk=instance.user_id).first()
-    if not profile:
-        return
-
-    old_img = profile.profile_picture
-    if old_img:
-        if old_img != instance.profile_picture:
-            os.remove(old_img.path)
-
-
-@receiver(post_delete, sender=Profile)
-def delete_media_files(sender, instance, **kwargs):
-    instance.profile_picture.delete(save=False)
