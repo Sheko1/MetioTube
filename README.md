@@ -69,5 +69,16 @@ DATABASES = {
 }
 ```
 
+In order to use media files change cloudinary credentials.
+
+ [Make account from here](https://cloudinary.com/users/register/free)
+```python
+cloudinary.config(
+    cloud_name=os.environ['CLOUD_NAME'], # - your cloud name
+    api_key=os.environ['API_KEY'], # - your api key
+    api_secret=os.environ['API_SECRET'] # - your api secret
+)
+```
+
 ## License
 [MIT](https://github.com/Sheko1/MetioTube/blob/main/LICENSE)
