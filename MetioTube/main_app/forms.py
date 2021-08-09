@@ -14,7 +14,7 @@ class VideoEditForm(forms.ModelForm):
     class Meta:
         model = Video
         fields = ('title', 'description', 'thumbnail')
-        help_texts = {'thumbnail': 'Can be blank. Valid extensions: jpg, png, jpeg'}
+        help_texts = {'thumbnail': 'Can be blank'}
 
 
 class CommentVideoForm(forms.ModelForm):

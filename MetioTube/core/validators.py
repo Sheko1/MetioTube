@@ -9,7 +9,7 @@ def validate_video_file(value):
         valid_extensions = ('.mp4', '.avi', '.mov')
 
         if not extension.lower() in valid_extensions:
-            raise ValidationError('Wrong video extension')
+            raise ValidationError('Wrong video extension! Valid extensions are: mp4, avi, mov!')
 
         if value.size > 104857600:
             raise ValidationError('Max video size is 100MB')
@@ -21,7 +21,7 @@ def validate_image(value):
         valid_extensions = ('.jpg', '.png', '.jpeg')
 
         if not extension.lower() in valid_extensions:
-            raise ValidationError('Wrong image extension')
+            raise ValidationError('Wrong image extension! Valid extensions are: jpg, png, jpeg! ')
 
         if value.size > 10485760:
             raise ValidationError('Max image size is 10MB')
