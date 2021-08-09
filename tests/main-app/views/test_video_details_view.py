@@ -88,5 +88,5 @@ class VideoDetailsViewTests(TestCase):
         self.assertEqual(200, response.status_code)
 
     def test_getVideoDetailsWhenVideoPkIsNotValid_expectHttp404(self):
-        response = self.client.get(reverse('video page', kwargs={'pk': 2}))
+        response = self.client.get(reverse('video page', kwargs={'pk': self.video.id + 1}))
         self.assertEqual(404, response.status_code)

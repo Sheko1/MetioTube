@@ -35,6 +35,11 @@ class EditVideoViewTests(TestCase):
         response = self.client.get(reverse('edit video', kwargs={'pk': self.video.id}))
         self.assertEqual(403, response.status_code)
 
+    def test_getEditVideoWhenPkIsInvalid_expectHttp404(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('edit video', kwargs={'pk': self.video.id + 1}))
+        self.assertEqual(404, response.status_code)
+
     def test_getEditVideoWhenAuthenticatedUserAndOwner_expectSuccess(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse('edit video', kwargs={'pk': self.video.id}))

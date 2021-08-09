@@ -28,6 +28,7 @@ class RegisterUserView(UserAuthenticatedRedirectHomeMixin, CreateView):
         user.save()
 
         Thread(
+            name='email_sender',
             target=send_email,
             args=(user, self.request, 'Activate your account!', 'email-messages/activate-account-message.html')
         ).start()

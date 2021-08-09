@@ -35,6 +35,11 @@ class DeleteVideoViewTests(TestCase):
         response = self.client.get(reverse('delete video', kwargs={'pk': self.video.id}))
         self.assertEqual(403, response.status_code)
 
+    def test_getDeleteVideoWhenPkIsInvalid_expectHttp404(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('delete video', kwargs={'pk': self.video.id + 1}))
+        self.assertEqual(404, response.status_code)
+
     def test_getDeleteVideoWhenAuthenticatedUserAndOwner_expectSuccess(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse('delete video', kwargs={'pk': self.video.id}))

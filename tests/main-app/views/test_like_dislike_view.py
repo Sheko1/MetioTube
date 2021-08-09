@@ -21,16 +21,19 @@ class LikeDislikeViewTests(TestCase):
             user=self.user,
         )
 
-    def test_getOrPostLikeDislikeWhenNotAuthenticatedUser_expectToRedirect(self):
-        response_get = self.client.get(reverse('like-dislike video', kwargs={'pk': self.video.id, 'like_dislike': 1}))
-        response_post = self.client.post(reverse('like-dislike video', kwargs={'pk': self.video.id, 'like_dislike': 1}))
-        self.assertEqual(302, response_get.status_code)
-        self.assertEqual(302, response_post.status_code)
+    def test_postLikeDislikeWhenNotAuthenticatedUser_expectToRedirect(self):
+        response = self.client.post(reverse('like-dislike video', kwargs={'pk': self.video.id, 'like_dislike': 1}))
+        self.assertEqual(302, response.status_code)
 
-    def test_getLikeDislikeWhenAuthenticatedUser_expect_Http405(self):
+    def test_getLikeDislikeWhenAuthenticatedUser_expectHttp405(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse('like-dislike video', kwargs={'pk': self.video.id, 'like_dislike': 1}))
         self.assertEqual(405, response.status_code)
+
+    def test_postLikeDislikeWhenVideoPkIsInvalid_expectHttp404(self):
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('like-dislike video', kwargs={'pk': self.video.id + 1, 'like_dislike': 1}))
+        self.assertEqual(404, response.status_code)
 
     def test_postLikeDislikeWhenUserHasNoLikes_expectToLike(self):
         self.client.force_login(self.user)

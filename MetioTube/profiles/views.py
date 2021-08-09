@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
+from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, ListView
 
 from MetioTube.main_app.models import Video
@@ -46,6 +47,7 @@ def edit_profile(request):
     return render(request, 'profiles/edit-profile.html', context)
 
 
+@require_POST
 @login_required
 def subscribe(request, pk):
     profile = get_object_or_404(Profile, pk=pk)

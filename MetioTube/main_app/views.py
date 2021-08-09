@@ -20,7 +20,6 @@ class HomeListView(ListView):
     template_name = 'metio-tube/index.html'
     model = Video
     context_object_name = 'videos'
-    paginate_by = 12
 
     def get_queryset(self):
         queryset = super().get_queryset()
