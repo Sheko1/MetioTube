@@ -1,10 +1,11 @@
 import os.path
 
 from django.core.exceptions import ValidationError
+from django.core.files import File
 
 
 def validate_video_file(value):
-    if hasattr(value, 'name'):
+    if isinstance(value, File):
         extension = os.path.splitext(value.name)[1]
         valid_extensions = ('.mp4', '.avi', '.mov')
 
@@ -16,7 +17,7 @@ def validate_video_file(value):
 
 
 def validate_image(value):
-    if hasattr(value, 'name'):
+    if isinstance(value, File):
         extension = os.path.splitext(value.name)[1]
         valid_extensions = ('.jpg', '.png', '.jpeg')
 
