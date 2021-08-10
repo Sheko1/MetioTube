@@ -18,4 +18,6 @@ class ProfileDetailsViewTests(TestCase):
 
     def test_getProfileDetailsWhenPkIsValid_expectSuccess(self):
         response = self.client.get(reverse('profile page', kwargs={'pk': self.user.id}))
+
+        self.assertEqual(self.user.id, response.context['profile'].user_id)
         self.assertEqual(200, response.status_code)

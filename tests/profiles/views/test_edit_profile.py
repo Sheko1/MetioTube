@@ -5,7 +5,7 @@ from django.urls import reverse
 UserModel = get_user_model()
 
 
-class EditProfileViewTests(TestCase):
+class EditProfileTests(TestCase):
     def setUp(self):
         self.user = UserModel.objects.create_user(
             email='test@test.test',

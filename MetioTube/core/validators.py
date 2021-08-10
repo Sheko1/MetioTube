@@ -22,7 +22,7 @@ def validate_image(value):
         valid_extensions = ('.jpg', '.png', '.jpeg')
 
         if not extension.lower() in valid_extensions:
-            raise ValidationError('Wrong image extension! Valid extensions are: jpg, png, jpeg! ')
+            raise ValidationError('Wrong image extension! Valid extensions are: jpg, png, jpeg!')
 
         if value.size > 10485760:
             raise ValidationError('Max image size is 10MB')

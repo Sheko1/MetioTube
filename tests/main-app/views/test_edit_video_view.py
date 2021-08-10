@@ -44,3 +44,11 @@ class EditVideoViewTests(TestCase):
         self.client.force_login(self.user)
         response = self.client.get(reverse('edit video', kwargs={'pk': self.video.id}))
         self.assertEqual(200, response.status_code)
+
+    def test_postEditVideo_expectToChangeAndRedirect(self):
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('edit video', kwargs={'pk': self.video.id}),
+                                    {'title': 'test2', 'description': 'test2'})
+        self.assertEqual('test2', Video.objects.get(user=self.user).title)
+        self.assertEqual('test2', Video.objects.get(user=self.user).description)
+        self.assertEqual(302, response.status_code)

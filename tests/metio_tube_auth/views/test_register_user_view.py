@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.core import mail
 import threading
 
+from MetioTube.profiles.models import Profile
+
 UserModel = get_user_model()
 
 
@@ -66,3 +68,13 @@ class RegisterUserViewTests(TestCase):
         response = self.client.get(activation_link)
 
         self.assertEqual(404, response.status_code)
+
+    def test_RegisterUserWhenRegistered_expectToHaveProfile(self):
+        user = UserModel.objects.create(
+            email='test@test.test',
+            password='test'
+        )
+        profile = Profile.objects.get(user=user)
+
+        self.assertEqual(user, profile.user)
+        self.assertEqual('test', profile.username)
