@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from MetioTube.main_app.models import Video, CommentVideo, LikeDislike
+from MetioTube.main_app.models import Video, CommentVideo, LikeDislike, VideoView
 
 
 @admin.register(Video)
@@ -33,3 +33,8 @@ class LikeDislikeAdmin(admin.ModelAdmin):
     @admin.display
     def type(self, obj):
         return 'Like' if obj.like_or_dislike == 1 else 'Dislike'
+
+
+@admin.register(VideoView)
+class VideoViewAdmin(admin.ModelAdmin):
+    list_display = ('video',)
